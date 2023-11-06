@@ -120,12 +120,35 @@ class ProbeCard():
 
     def get_scatter(self):
         df = self.get_pc_df()
-        fig = go.Figure(go.Scatter(x=df.x_pad,
+        fig = go.Figure()
+        ls = df.pad_name.unique().tolist()
+        ic(ls)
+        for item in ls:
+            fig.add_trace(go.Scatter(
+                x = df.loc[df["pad_name"] == item]["x_pad"],
+                y = df.loc[df["pad_name"] == item]["y_pad"],
+                mode = "markers",
+                hoverinfo="text",
+                hovertext=df.route,
+                name = item,
+            ))
+        fig.add_trace(go.Scatter(x=df.x_pad,
                         y=df.y_pad,
                         mode="markers",
+                        marker=dict(
+                            color='rgba(135, 206, 250, 0.01)',
+                            size=5,
+                            line=dict(
+                                    color='black',
+                                    width=1)),
                         hoverinfo="text",
-                        hovertext=df.route),
+                        hovertext=df.route,
+                        name = "All")
                         )
+        
+
+
+
         fig.update_layout(title={"text" : "ProbeMap",
                                  "x":0.5,
                                  "y" : 0.9,
